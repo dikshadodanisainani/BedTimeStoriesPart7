@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity,KeyboardAvoidingView,ToastAndroid} from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, TouchableOpacity,KeyboardAvoidingView,ToastAndroid,TextInput} from 'react-native';
 import {Header} from 'react-native-elements';
 import db from '../config'
 //import firebase from 'firebase'
