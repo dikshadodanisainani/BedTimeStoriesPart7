@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View ,FlatList,ScrollView} from 'react-native';
-import {SearchBar} from 'react-native-elements';
-import {Header} from 'react-native-elements';
+import {SearchBar,Header} from 'react-native-elements';
 import db from '../config'
 
 
