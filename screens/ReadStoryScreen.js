@@ -1,29 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View ,FlatList,ScrollView} from 'react-native';
-import {SearchBar,Header} from 'react-native-elements';
-import db from '../config'
+import { StyleSheet, Text, View, KeyboardAvoidingView,FlatList } from 'react-native';
+import { Header } from 'react-native-elements';
+import db from '../config';
+import * as firebase from 'firebase'
+import { Searchbar } from 'react-native-paper';
 
 
-
-
-export default class ReadStoryScreen extends React.Component {
-  constructor(){
-    super();
-    this.state ={
-      allStories:[],
-      dataSource:[],
-      search : ''
+export default class ReadScreen extends React.Component {
+  constructor()
+  {
+    super()
+    this.state={
+      Search:'',
+      Story:[],
     }
   }
-  componentDidMount(){
-    this.retrieveStories()
-  }
-
-  updateSearch = search => {
-    this.setState({ search });
-  };
-
-
+  
   retrieveStories=()=>{
     try {
       var allStories= []
@@ -43,80 +35,53 @@ export default class ReadStoryScreen extends React.Component {
     }
   };
 
-
-  SearchFilterFunction(text) {
-    //passing the inserted text in textinput
-    const newData = this.state.allStories.filter((item)=> {
-      //applying filter for the inserted text in search bar
-      const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    this.setState({
-      //setting the filtered newData on datasource
-      //After setting the data it will automatically re-render the view
-      dataSource: newData,
-      search: text,
-    });
+componentDidMount()
+  {
+    this.retrieveStories()
   }
+
+  /*updateSearch=async(text)=>
+  {
+    var t=text
+    const search= await db.collection("Writers").where("Story","==",t).get()
+    read.docs.map((doc)=>{
+      this.setState({
+          Story:[...this.state.Story,doc.data()],         
+      })
+  })
+    
+  }*/
 
     render(){
-      return(
-        <View style ={styles.container}>
-           <Header 
-                backgroundColor = {'pink'}
-                centerComponent = {{
-                    text : 'Bed Time Stories',
-                    style : { color: 'white', fontSize: 20}
-                }}
-            />
-          <View styles ={{height:20,width:'100%'}}>
-              <SearchBar
-              placeholder="Type Here..."
-              onChangeText={text => this.SearchFilterFunction(text)}
-              onClear={text => this.SearchFilterFunction('')}
-              value={this.state.search}
-            />
-          </View>
-          
-          <FlatList
-                data={this.state.search === "" ?  this.state.allStories: this.state.dataSource}
-                renderItem={({ item }) => (
-                  <View style={styles.itemContainer}>
-                    <Text>  Title: {item.title}</Text>
-                    <Text>  Author : {item.author}</Text>
-                  </View>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                /> 
-          
-          
-          
-        </View>  
-      );      
-    }
-}
+    return (
+      <KeyboardAvoidingView behavior='padding' enabled >
+       <Header
+    centerComponent={{text:'STORY HUB', style: { color: '#fff', fontSize: 20 }}}
+    />
+    <Searchbar
+    placeholder="Search Story..."
+    onChangeText={this.updateSearch}
+    />
+    <FlatList
+    data={this.state.Story}
+    renderItem={({item})=>
+      (
+        <View style={{borderBottomWidth:2,}}>
+        <Text>{"Title: "+item.Title}</Text>
+        <Text>{"Author: "+item.Author}</Text>
+        <Text>{"Story: "+item.Story}</Text>
+        </View>
+      )}
+    keyExtractor={(item,index)=>
+       index.toString()}
+    
+    />
 
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  },
-  item: {
-    backgroundColor: 'pink',
-    padding:10,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-  itemContainer: {
-    height: 80,
-    width:'100%',
-    borderWidth: 2,
-    borderColor: 'pink',
-    justifyContent:'center',
-    alignSelf: 'center',
+      </KeyboardAvoidingView>
+    );
   }
-});
+  }
+  const styles = StyleSheet.create({
+
+  })
+    
